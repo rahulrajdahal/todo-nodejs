@@ -1,8 +1,10 @@
 const express = require("express");
 const multer = require("multer");
 const sharp = require("sharp");
-const User = require("../models/user");
 const router = new express.Router();
+
+const User = require("../models/user");
+const auth = require("../middleware/auth");
 
 // Create a User | Sign up User
 router.post("/users", async (req, res) => {
@@ -63,9 +65,9 @@ router.patch("/users/me", auth, async (req, res) => {
   }
 
   try {
-    updates.forEach((update) => (req.user[update] = req.body[update]));
+    updates.forEach((update) => req.user[update] = req.body[update]);
     await req.user.save();
-    res.send(rqe.user);
+    res.send(req.user);
   } catch (e) {
     res.status(400).send(e);
   }
