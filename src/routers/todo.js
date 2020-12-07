@@ -93,4 +93,21 @@ router.patch("/todos/:id", auth, async (req, res) => {
   }
 });
 
+// Delete todo
+router.delete("/todos/:id", auth, async (req, res) => {
+  const _id = req.params.id;
+
+  try {
+    const todo = await Todo.findOneAndDelete({ _id, owner: req.user._id });
+
+    if (!todo) {
+      res.status(400).send();
+    }
+
+    res.send(todo);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
 module.exports = router;
