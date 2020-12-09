@@ -108,7 +108,7 @@ router.post(
       })
       .png()
       .toBuffer();
-    req.user.buffer = buffer;
+    req.user.avatar = buffer;
     await req.user.save();
     res.send();
   },

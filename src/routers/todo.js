@@ -1,7 +1,6 @@
 const express = require("express");
 
 const auth = require("../middleware/auth");
-const { update } = require("../models/todo");
 const Todo = require("../models/todo");
 
 const router = new express.Router();
