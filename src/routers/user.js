@@ -226,7 +226,7 @@ const upload = multer({
  *          application/x-www-form-urlencoded:
  *            schema:
  *              $ref: "#/components/schemas/Upload Avatar"
- *          application/json:
+ *          multipart/form-data:
  *            schema:
  *              $ref: "#/components/schemas/Upload Avatar"
  *     responses:
