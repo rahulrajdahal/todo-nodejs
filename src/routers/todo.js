@@ -2,10 +2,25 @@ const express = require("express");
 
 const auth = require("../middleware/auth");
 const Todo = require("../models/todo");
+const { getAllTodos } = require("../controllers/todo");
 
 const router = new express.Router();
 
-// Get all Todos
+/**
+ * @openapi
+ * /todos:
+ *   get:
+ *     tags:
+ *       - Todo
+ *     security:
+ *       - bearerAuth: []
+ *     description: Get user todos
+ *     responses:
+ *       200:
+ *         description: Fetches user todos in the database.
+ *       500:
+ *         description: Internal server error`.
+ */
 router.get("/todos", auth, async (req, res) => {
   const match = {};
   const sort = {};
@@ -37,7 +52,31 @@ router.get("/todos", auth, async (req, res) => {
   }
 });
 
-// Create a Todo
+/**
+ * @openapi
+ * /todos:
+ *   post:
+ *     tags:
+ *       - Todo
+ *     description: Create a new todo.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *        content:
+ *          application/x-www-form-urlencoded:
+ *            schema:
+ *              $ref: "#/components/schemas/POST Todo"
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/POST Todo"
+ *     responses:
+ *       201:
+ *         description: Created a new todo.
+ *       401:
+ *         description: Unauthorized Error.
+ *       400:
+ *         description: Bad Request.
+ */
 router.post("/todos", auth, async (req, res) => {
   const todo = new Todo({ ...req.body, owner: req.user._id });
 
@@ -49,7 +88,30 @@ router.post("/todos", auth, async (req, res) => {
   }
 });
 
-// Get Todo by Id
+/**
+ * @openapi
+ * /todos/{id}:
+ *   get:
+ *     tags:
+ *       - Todo
+ *     description: Get a todo by specified Id.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: Unique identifier of the todo item.
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Fetched Todo successfully.
+ *       401:
+ *         description: Unauthorized Error.
+ *       500:
+ *         description: Internal Server Error.
+ */
 router.get("/todos/:id", auth, async (req, res) => {
   const _id = req.params.id;
   try {
@@ -65,7 +127,38 @@ router.get("/todos/:id", auth, async (req, res) => {
   }
 });
 
-// Update Todo
+/**
+ * @openapi
+ * /todos/{id}:
+ *   patch:
+ *     tags:
+ *       - Todo
+ *     description: Update a todo by specified Id.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: Unique identifier of the todo item.
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *        content:
+ *          application/x-www-form-urlencoded:
+ *            schema:
+ *              $ref: "#/components/schemas/Update Todo"
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Update Todo"
+ *     responses:
+ *       204:
+ *         description: Updated Todo successfully.
+ *       401:
+ *         description: Unauthorized Error.
+ *       400:
+ *         description: Bad Request Error.
+ */
 router.patch("/todos/:id", auth, async (req, res) => {
   const _id = req.params.id;
   const updates = Object.keys(req.body);
@@ -92,7 +185,30 @@ router.patch("/todos/:id", auth, async (req, res) => {
   }
 });
 
-// Delete todo
+/**
+ * @openapi
+ * /todos/{id}:
+ *   delete:
+ *     tags:
+ *       - Todo
+ *     description: Delete a todo by specified Id.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: Unique identifier of the todo item.
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       204:
+ *         description: Deleted Todo successfully.
+ *       401:
+ *         description: Unauthorized Error.
+ *       500:
+ *         description: Internal Server Error.
+ */
 router.delete("/todos/:id", auth, async (req, res) => {
   const _id = req.params.id;
 
